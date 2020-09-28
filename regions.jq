@@ -2,7 +2,7 @@
   .Regions[].RegionName |
   select(IN($regions[])) |
   {
-    "key": ("guardduty_" + .),
+    "key": ($prefix + .),
     "value": {
       "source": $source,
       "aws_region": .,

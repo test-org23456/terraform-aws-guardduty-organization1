@@ -1,45 +1,10 @@
-locals {
-  aws_credentials_admin = {
-    profile         = var.admin_profile
-    assume_role_arn = var.admin_assume_role_arn
-  }
-  aws_credentials_master = {
-    profile         = var.master_profile
-    assume_role_arn = var.master_assume_role_arn
-  }
-}
-
-module "guardduty_s3" {
-  source = "github.com/asannou/terraform-aws-guardduty-organization//s3"
-  parameters = {
-    aws_credentials = {
-      admin = local.aws_credentials_admin
-    }
-    ipset          = var.ipset
-    threatintelset = var.threatintelset
-  }
-}
-
-module "guardduty_lambda" {
-  source = "github.com/asannou/terraform-aws-guardduty-organization//lambda"
-  parameters = {
-    aws_credentials = {
-      admin = local.aws_credentials_admin
-    }
-    incoming_web_hook_url = var.incoming_web_hook_url
-    slack_channel         = var.slack_channel
-    min_severity_level    = var.min_severity_level
-  }
-}
-
-locals {
-  parameters = {
-    aws_credentials = {
-      admin  = local.aws_credentials_admin
-      master = local.aws_credentials_master
-    }
-    s3     = module.guardduty_s3
-    lambda = module.guardduty_lambda
-  }
+module "guardduty" {
+  source                 = "github.com/asannou/terraform-aws-guardduty-organization"
+  admin_profile          = var.admin_profile
+  admin_assume_role_arn  = var.admin_assume_role_arn
+  master_profile         = var.master_profile
+  master_assume_role_arn = var.master_assume_role_arn
+  ipset                  = var.ipset
+  threatintelset         = var.threatintelset
 }
 

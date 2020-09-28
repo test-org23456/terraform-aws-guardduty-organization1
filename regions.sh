@@ -11,5 +11,6 @@ aws ec2 describe-regions | \
     --sort-keys \
     --from-file regions.jq \
     --argjson regions "$(get_guardduty_regions)" \
-    --arg source 'github.com/asannou/terraform-aws-guardduty-organization//region'
+    --arg prefix 'region_' \
+    --arg source './region'
 

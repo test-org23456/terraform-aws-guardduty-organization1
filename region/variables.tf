@@ -14,8 +14,9 @@ variable "parameters" {
         assume_role_arn = string
       })
     })
-    s3     = any
-    lambda = any
+    finding_publishing_frequency = string
+    s3                           = any
+    lambda                       = any
   })
 }
 

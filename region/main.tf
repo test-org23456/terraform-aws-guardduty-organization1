@@ -22,7 +22,8 @@ locals {
 }
 
 resource "aws_guardduty_detector" "admin" {
-  enable = true
+  enable                       = true
+  finding_publishing_frequency = var.parameters.finding_publishing_frequency
 }
 
 resource "aws_guardduty_ipset" "admin" {

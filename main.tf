@@ -23,6 +23,7 @@ module "s3" {
 module "lambda" {
   source = "./lambda"
   parameters = {
+    aws_region = var.lambda_aws_region
     aws_credentials = {
       admin = local.aws_credentials_admin
     }

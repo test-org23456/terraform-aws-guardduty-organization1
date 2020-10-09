@@ -33,6 +33,11 @@ variable "threatintelset" {
   default = ""
 }
 
+variable "lambda_aws_region" {
+  type    = string
+  default = "us-east-1"
+}
+
 variable "incoming_web_hook_url" {
   type        = string
   description = "Your unique Incoming Web Hook URL from slack service"

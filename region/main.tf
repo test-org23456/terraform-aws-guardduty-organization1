@@ -15,32 +15,50 @@ provider "aws" {
   }
 }
 
+provider "aws" {
+  alias   = "lambda"
+  region  = local.lambda == null ? "us-east-1" : local.lambda.aws_region
+  profile = var.parameters.aws_credentials.admin.profile
+  assume_role {
+    role_arn = var.parameters.aws_credentials.admin.assume_role_arn
+  }
+}
+
 data "aws_caller_identity" "admin" {}
 
 locals {
-  admin_account_id = data.aws_caller_identity.admin.account_id
+  admin_account_id             = data.aws_caller_identity.admin.account_id
+  finding_publishing_frequency = var.parameters.finding_publishing_frequency
+  s3                           = var.parameters.s3
+  lambda                       = var.parameters.lambda
+}
+
+resource "aws_guardduty_detector" "master" {
+  provider                     = aws.master
+  enable                       = true
+  finding_publishing_frequency = local.finding_publishing_frequency
 }
 
 resource "aws_guardduty_detector" "admin" {
   enable                       = true
-  finding_publishing_frequency = var.parameters.finding_publishing_frequency
+  finding_publishing_frequency = local.finding_publishing_frequency
 }
 
 resource "aws_guardduty_ipset" "admin" {
-  count       = var.parameters.s3 == null ? 0 : 1
+  count       = local.s3 == null ? 0 : 1
   detector_id = aws_guardduty_detector.admin.id
   name        = "ipset"
   format      = "TXT"
-  location    = var.parameters.s3.ipset_location
+  location    = local.s3.ipset_location
   activate    = true
 }
 
 resource "aws_guardduty_threatintelset" "admin" {
-  count       = var.parameters.s3 == null ? 0 : 1
+  count       = local.s3 == null ? 0 : 1
   detector_id = aws_guardduty_detector.admin.id
   name        = "threatintelset"
   format      = "TXT"
-  location    = var.parameters.s3.threatintelset_location
+  location    = local.s3.threatintelset_location
   activate    = true
 }
 
@@ -80,16 +98,17 @@ data "aws_iam_policy_document" "guardduty" {
 }
 
 resource "aws_sns_topic_subscription" "guardduty" {
-  count     = var.parameters.lambda == null ? 0 : 1
+  count     = local.lambda == null ? 0 : 1
   topic_arn = aws_sns_topic.guardduty.arn
   protocol  = "lambda"
-  endpoint  = var.parameters.lambda.function.arn
+  endpoint  = local.lambda.function.arn
 }
 
 resource "aws_lambda_permission" "guardduty" {
-  count         = var.parameters.lambda == null ? 0 : 1
+  provider      = aws.lambda
+  count         = local.lambda == null ? 0 : 1
   action        = "lambda:InvokeFunction"
-  function_name = var.parameters.lambda.function.function_name
+  function_name = local.lambda.function.function_name
   principal     = "sns.amazonaws.com"
   source_arn    = aws_sns_topic.guardduty.arn
 }
@@ -118,7 +137,10 @@ locals {
 }
 
 resource "aws_guardduty_member" "admin" {
-  depends_on                 = [aws_guardduty_organization_configuration.admin]
+  depends_on = [
+    aws_guardduty_detector.master,
+    aws_guardduty_organization_configuration.admin,
+  ]
   for_each                   = local.accounts
   detector_id                = aws_guardduty_detector.admin.id
   account_id                 = each.key

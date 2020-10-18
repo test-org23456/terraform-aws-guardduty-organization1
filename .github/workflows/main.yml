@@ -2,6 +2,7 @@ name: Make Terraform configurations for all AWS Regions
 on:
   schedule:
     - cron: '0 4 * * *'
+  workflow_dispatch:
 jobs:
   make:
     name: make regions.tf.json

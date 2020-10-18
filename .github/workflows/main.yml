@@ -1,0 +1,17 @@
+name: Make Terraform configurations for all AWS Regions
+on:
+  schedule:
+    - cron: '0 4 * * *'
+jobs:
+  make:
+    name: make regions.tf.json
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@v2
+      - run: apt install awscli jq
+      - run: sh regions.sh
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-west-2

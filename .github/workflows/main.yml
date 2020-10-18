@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: checkout
         uses: actions/checkout@v2
-      - run: apt install awscli jq
+      - run: sudo apt-get install awscli jq
       - run: sh regions.sh
         env:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}

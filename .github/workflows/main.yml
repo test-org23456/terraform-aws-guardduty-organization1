@@ -1,4 +1,4 @@
-name: Make Terraform configurations for all AWS Regions
+name: Make Terraform configurations for all AWS regions
 on:
   schedule:
     - cron: '0 4 * * *'
@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-20.04
     steps:
       - uses: actions/checkout@v2
-      - run: sudo apt-get install awscli jq
+      - run: sudo apt-get install awscli
       - uses: aws-actions/configure-aws-credentials@v1
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}

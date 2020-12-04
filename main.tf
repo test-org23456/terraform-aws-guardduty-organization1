@@ -42,6 +42,7 @@ locals {
     finding_publishing_frequency = var.finding_publishing_frequency
     s3                           = module.s3
     lambda                       = module.lambda
+    filters                      = var.filters
   }
 }
 

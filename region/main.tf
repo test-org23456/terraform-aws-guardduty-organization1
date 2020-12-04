@@ -31,6 +31,7 @@ locals {
   finding_publishing_frequency = var.parameters.finding_publishing_frequency
   s3                           = var.parameters.s3
   lambda                       = var.parameters.lambda
+  filters                      = var.parameters.filters
 }
 
 resource "aws_guardduty_detector" "master" {
@@ -60,6 +61,28 @@ resource "aws_guardduty_threatintelset" "admin" {
   format      = "TXT"
   location    = local.s3.threatintelset_location
   activate    = true
+}
+
+resource "aws_guardduty_filter" "admin" {
+  count       = length(local.filters)
+  detector_id = aws_guardduty_detector.admin.id
+  name        = local.filters[count.index].name
+  action      = "ARCHIVE"
+  rank        = count.index + 1
+  finding_criteria {
+    dynamic "criterion" {
+      for_each = local.filters[count.index].criterions
+      content {
+        field                 = criterion.value.field
+        equals                = lookup(criterion.value, "equals", null)
+        not_equals            = lookup(criterion.value, "not_equals", null)
+        greater_than          = lookup(criterion.value, "greater_than", null)
+        greater_than_or_equal = lookup(criterion.value, "greater_than_or_equal", null)
+        less_than             = lookup(criterion.value, "less_than", null)
+        less_than_or_equal    = lookup(criterion.value, "less_than_or_equal", null)
+      }
+    }
+  }
 }
 
 resource "aws_cloudwatch_event_rule" "guardduty" {

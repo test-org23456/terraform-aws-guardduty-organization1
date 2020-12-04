@@ -26,6 +26,24 @@ variable "threatintelset" {
   type = string
 }
 
+variable "filters" {
+  default = [
+    {
+      name = "ConsoleLogin"
+      criterions = [
+        {
+          field  = "region"
+          not_equals = ["us-east-1"]
+        },
+        {
+          field  = "type"
+          equals = ["UnauthorizedAccess:IAMUser/ConsoleLogin"]
+        }
+      ]
+    }
+  ]
+}
+
 variable "incoming_web_hook_url" {
   type = string
 }
@@ -37,4 +55,3 @@ variable "slack_channel" {
 variable "min_severity_level" {
   type = string
 }
-

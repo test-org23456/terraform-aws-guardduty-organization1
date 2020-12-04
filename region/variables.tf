@@ -17,6 +17,7 @@ variable "parameters" {
     finding_publishing_frequency = string
     s3                           = any
     lambda                       = any
+    filters                      = any
   })
 }
 

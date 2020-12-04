@@ -6,5 +6,6 @@ module "guardduty" {
   master_assume_role_arn = var.master_assume_role_arn
   ipset                  = var.ipset
   threatintelset         = var.threatintelset
+  filters                = var.filters
 }
 

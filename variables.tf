@@ -33,6 +33,11 @@ variable "threatintelset" {
   default = ""
 }
 
+variable "filters" {
+  type    = any
+  default = []
+}
+
 variable "lambda_aws_region" {
   type    = string
   default = "us-east-1"

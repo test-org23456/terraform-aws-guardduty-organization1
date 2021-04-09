@@ -10,6 +10,11 @@
       "parameters": "${local.parameters}",
       "source": "./region"
     },
+    "region_ap-northeast-3": {
+      "aws_region": "ap-northeast-3",
+      "parameters": "${local.parameters}",
+      "source": "./region"
+    },
     "region_ap-south-1": {
       "aws_region": "ap-south-1",
       "parameters": "${local.parameters}",

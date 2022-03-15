@@ -38,11 +38,21 @@ resource "aws_guardduty_detector" "master" {
   provider                     = aws.master
   enable                       = true
   finding_publishing_frequency = local.finding_publishing_frequency
+  datasources {
+    s3_logs {
+      enable = true
+    }
+  }
 }
 
 resource "aws_guardduty_detector" "admin" {
   enable                       = true
   finding_publishing_frequency = local.finding_publishing_frequency
+  datasources {
+    s3_logs {
+      enable = true
+    }
+  }
 }
 
 resource "aws_guardduty_ipset" "admin" {
@@ -146,6 +156,11 @@ resource "aws_guardduty_organization_configuration" "admin" {
   depends_on  = [aws_guardduty_organization_admin_account.master]
   detector_id = aws_guardduty_detector.admin.id
   auto_enable = true
+  datasources {
+    s3_logs {
+      auto_enable = true
+    }
+  }
 }
 
 data "aws_organizations_organization" "master" {

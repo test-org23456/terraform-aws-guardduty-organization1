@@ -10,7 +10,11 @@ data "aws_organizations_organization" "admin" {}
 
 resource "aws_s3_bucket" "guardduty" {
   bucket_prefix = "aws-guardduty-"
-  acl           = "private"
+}
+
+resource "aws_s3_bucket_acl" "example_bucket_acl" {
+  bucket = aws_s3_bucket.guardduty.id
+  acl    = "private"
 }
 
 resource "aws_s3_bucket_public_access_block" "guardduty" {

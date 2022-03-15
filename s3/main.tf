@@ -12,7 +12,7 @@ resource "aws_s3_bucket" "guardduty" {
   bucket_prefix = "aws-guardduty-"
 }
 
-resource "aws_s3_bucket_acl" "example_bucket_acl" {
+resource "aws_s3_bucket_acl" "guardduty" {
   bucket = aws_s3_bucket.guardduty.id
   acl    = "private"
 }
@@ -53,14 +53,14 @@ data "aws_iam_policy_document" "guardduty" {
   }
 }
 
-resource "aws_s3_bucket_object" "ipset" {
+resource "aws_s3_object" "ipset" {
   bucket  = aws_s3_bucket.guardduty.id
   acl     = "private"
   content = var.parameters.ipset
   key     = "ipset.txt"
 }
 
-resource "aws_s3_bucket_object" "threatintelset" {
+resource "aws_s3_object" "threatintelset" {
   bucket  = aws_s3_bucket.guardduty.id
   acl     = "private"
   content = var.parameters.threatintelset

@@ -57,21 +57,23 @@ nt(["output.function"]):::v
 nu(["output.secretsmanager_secret"]):::v
 end
 class nr vs
-subgraph "nv"["Input Variables"]
-nw(["var.aws_region"]):::v
-nx(["var.parameters"]):::v
+nv[/"provider<br/>[&quot;registry.terraform.io/hashicorp/archive&quot;]"\]
+nw[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
+subgraph "nx"["Input Variables"]
+ny(["var.aws_region"]):::v
+nz(["var.parameters"]):::v
 end
-class nv vs
-ny(["local.<br/>guardduty_to_slack_policy_arns"]):::v
-nz(["local.example_secret"]):::v
-n10(["local.function_name"]):::v
+class nx vs
+n10(["local.<br/>guardduty_to_slack_policy_arns"]):::v
+n11(["local.example_secret"]):::v
+n12(["local.function_name"]):::v
 ni-->n1
 nc-->n3
 nd-->n4
 ne-->n5
 nb-->n6
 n6-->n7
-ny-->n7
+n10-->n7
 n3-->n8
 n6-->n8
 n4-->n9
@@ -85,15 +87,28 @@ nm-->nk
 no-->nk
 ni-->nm
 nm-->nn
-nz-->nn
+n11-->nn
+nv-->no
+nw-->nq
+nw-->nb
 ni-->nc
 n1-->nd
 nm-->ne
 nq-->nf
-n10-->nf
-nw--->ns
+n12-->nf
+ny--->ns
 nk--->nt
 nm--->nu
+no-->nv
+n7-->nw
+n8-->nw
+n9-->nw
+na-->nw
+nh-->nw
+nk-->nw
+nn-->nw
+ny--->nw
+nz--->nw
 ```
 
 ## region
@@ -152,49 +167,75 @@ subgraph "nq"["Organizations"]
 nr{{"data.<br/>aws_organizations_organization.<br/>master"}}:::r
 end
 class nq cs
-subgraph "ns"["Input Variables"]
-nt(["var.aws_region"]):::v
-nu(["var.parameters"]):::v
+ns[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
+nt[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;].<br/>lambda"\]
+nu[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;].<br/>master"\]
+subgraph "nv"["Input Variables"]
+nw(["var.aws_region"]):::v
+nx(["var.parameters"]):::v
 end
-class ns vs
-nv(["local.<br/>finding_publishing_frequency"]):::v
-nw(["local.filters"]):::v
-nx(["local.s3"]):::v
-ny(["local.accounts"]):::v
-nz(["local.admin_account_id"]):::v
-n10(["local.lambda"]):::v
+class nv vs
+ny(["local.<br/>finding_publishing_frequency"]):::v
+nz(["local.filters"]):::v
+n10(["local.s3"]):::v
+n11(["local.accounts"]):::v
+n12(["local.admin_account_id"]):::v
+n13(["local.lambda"]):::v
+ns-->n1
 n1-->n2
 ni-->n2
-nv-->n4
-nv-->n5
+ny-->n4
+ns-->n4
+ny-->n5
+nu-->n5
 n4-->n6
-nw-->n6
+nz-->n6
 n4-->n7
-nx-->n7
+n10-->n7
 n5-->n8
 na-->n8
-ny-->n8
+n11-->n8
 n4-->n9
-nz-->n9
+n12-->n9
+nu-->n9
 n9-->na
 n4-->nb
-nx-->nb
+n10-->nb
 ne-->nd
 np-->ne
 ni-->ng
+nt-->ng
 nd-->ni
 no-->nj
 ni-->nk
-n10-->nk
+n13-->nk
+ns-->nm
 ni-->no
 nm-->np
-nr-->ny
-nz-->ny
-nm-->nz
-nu--->nw
-nu--->nv
-nu--->n10
-nu--->nx
+nu-->nr
+nr-->n11
+n12-->n11
+nm-->n12
+nx--->nz
+nx--->ny
+nx--->n13
+nx--->n10
+n2-->ns
+n6-->ns
+n7-->ns
+n8-->ns
+nb-->ns
+nj-->ns
+nk-->ns
+nw--->ns
+nx--->ns
+ng-->nt
+n13-->nt
+n5-->nu
+n9-->nu
+nr-->nu
+nw--->nu
+nx--->nu
 ```
 
 ## s3
@@ -238,13 +279,15 @@ nh(["output.ipset_location"]):::v
 ni(["output.<br/>threatintelset_location"]):::v
 end
 class ng vs
-subgraph "nj"["Input Variables"]
-nk(["var.aws_region"]):::v
-nl(["var.parameters"]):::v
+nj[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
+subgraph "nk"["Input Variables"]
+nl(["var.aws_region"]):::v
+nm(["var.parameters"]):::v
 end
-class nj vs
+class nk vs
 n2-->n1
 nf-->n2
+nj-->n4
 n4-->n5
 n7-->n6
 ne-->n6
@@ -253,10 +296,19 @@ n2-->n8
 n4-->n8
 n4-->n9
 n4-->na
+nj-->nc
 n4-->ne
 nc-->ne
 nc-->nf
 n9--->nh
 na--->ni
+n1-->nj
+n5-->nj
+n6-->nj
+n8-->nj
+n9-->nj
+na-->nj
+nl--->nj
+nm--->nj
 ```
 

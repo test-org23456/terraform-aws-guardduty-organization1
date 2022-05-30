@@ -1,0 +1,39 @@
+name: tfmermaid
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+    env:
+      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
+    steps:
+      - uses: actions/checkout@v3
+      - uses: asannou/tfmermaid-action@master
+        with:
+          file: ${{ github.workspace }}/README.md
+          label: lambda
+          include: provider
+          working-directory: ./lambda
+      - uses: asannou/tfmermaid-action@master
+        with:
+          file: ${{ github.workspace }}/README.md
+          label: region
+          include: provider
+          working-directory: ./region
+      - uses: asannou/tfmermaid-action@master
+        with:
+          file: ${{ github.workspace }}/README.md
+          label: s3
+          include: provider
+          working-directory: ./s3
+      - name: commit
+        run: |
+          git add README.md
+          if ! git diff --cached --quiet --exit-code
+          then
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git commit -m "generated"
+            git push
+          fi

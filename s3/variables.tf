@@ -13,6 +13,7 @@ variable "parameters" {
     })
     ipset          = string
     threatintelset = string
+    default_tags   = map(any)
   })
 }
 

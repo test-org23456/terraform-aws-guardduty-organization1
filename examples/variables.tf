@@ -44,14 +44,3 @@ variable "filters" {
   ]
 }
 
-variable "incoming_web_hook_url" {
-  type = string
-}
-
-variable "slack_channel" {
-  type = string
-}
-
-variable "min_severity_level" {
-  type = string
-}

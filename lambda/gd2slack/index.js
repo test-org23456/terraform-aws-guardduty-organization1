@@ -8,11 +8,21 @@ const AWS = require('aws-sdk');
 const url = require('url');
 const https = require('https');
 
-const webHookUrl = process.env['webHookUrl'];
+const secretId = process.env.secretId;
 const slackChannel = process.env.slackChannel;
 const minSeverityLevel = process.env['minSeverityLevel'];
 
 function postMessage(message, callback) {
+  const secretsmanager = new AWS.SecretsManager();
+  const params = { SecretId: secretId };
+  secretsmanager.getSecretValue(params, (err, data) => {
+    if (err) throw err;
+    const secret = JSON.parse(data.SecretString);
+    _postMessage(message, secret.slack_webhook_url, callback);
+  });
+}
+
+function _postMessage(message, webHookUrl, callback) {
   const body = JSON.stringify(message);
   const options = url.parse(webHookUrl);
   options.method = 'POST';

@@ -4,9 +4,12 @@ provider "aws" {
   assume_role {
     role_arn = var.parameters.aws_credentials.admin.assume_role_arn
   }
+  default_tags {
+    tags = var.parameters.default_tags
+  }
 }
 
-data "aws_organizations_organization" "admin" {}
+data "aws_caller_identity" "admin" {}
 
 resource "aws_s3_bucket" "guardduty" {
   bucket_prefix = "aws-guardduty-"
@@ -25,6 +28,16 @@ resource "aws_s3_bucket_public_access_block" "guardduty" {
   restrict_public_buckets = true
 }
 
+resource "aws_s3_bucket_server_side_encryption_configuration" "guardduty" {
+  bucket = aws_s3_bucket.guardduty.bucket
+  rule {
+    apply_server_side_encryption_by_default {
+      kms_master_key_id = aws_kms_key.guardduty.arn
+      sse_algorithm     = "aws:kms"
+    }
+  }
+}
+
 resource "aws_s3_bucket_policy" "guardduty" {
   bucket     = aws_s3_bucket.guardduty.id
   policy     = data.aws_iam_policy_document.guardduty.json
@@ -35,21 +48,11 @@ data "aws_iam_policy_document" "guardduty" {
   statement {
     effect = "Allow"
     principals {
-      type        = "*"
-      identifiers = ["*"]
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.admin.account_id}:role/aws-service-role/guardduty.amazonaws.com/AWSServiceRoleForAmazonGuardDuty"]
     }
     actions   = ["s3:GetObject"]
     resources = ["${aws_s3_bucket.guardduty.arn}/*"]
-    condition {
-      test     = "ArnLike"
-      variable = "aws:PrincipalArn"
-      values   = ["arn:aws:iam::*:role/aws-service-role/guardduty.amazonaws.com/AWSServiceRoleForAmazonGuardDuty"]
-    }
-    condition {
-      test     = "StringEquals"
-      variable = "aws:PrincipalOrgID"
-      values   = [data.aws_organizations_organization.admin.id]
-    }
   }
 }
 
@@ -65,5 +68,36 @@ resource "aws_s3_object" "threatintelset" {
   acl     = "private"
   content = var.parameters.threatintelset
   key     = "threatintelset.txt"
+}
+
+resource "aws_kms_key" "guardduty" {
+  enable_key_rotation = true
+  policy              = data.aws_iam_policy_document.key.json
+}
+
+data "aws_iam_policy_document" "key" {
+  statement {
+    effect  = "Allow"
+    actions = ["kms:*"]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.admin.account_id}:root"]
+    }
+    resources = ["*"]
+  }
+  statement {
+    effect  = "Allow"
+    actions = ["kms:Decrypt*"]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.admin.account_id}:role/aws-service-role/guardduty.amazonaws.com/AWSServiceRoleForAmazonGuardDuty"]
+    }
+    resources = ["*"]
+  }
+}
+
+resource "aws_kms_alias" "guardduty" {
+  name          = "alias/guardduty/s3"
+  target_key_id = aws_kms_key.guardduty.key_id
 }
 

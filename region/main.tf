@@ -5,6 +5,9 @@ provider "aws" {
   assume_role {
     role_arn = var.parameters.aws_credentials.master.assume_role_arn
   }
+  default_tags {
+    tags = var.parameters.default_tags
+  }
 }
 
 provider "aws" {
@@ -12,6 +15,9 @@ provider "aws" {
   profile = var.parameters.aws_credentials.admin.profile
   assume_role {
     role_arn = var.parameters.aws_credentials.admin.assume_role_arn
+  }
+  default_tags {
+    tags = var.parameters.default_tags
   }
 }
 
@@ -21,6 +27,9 @@ provider "aws" {
   profile = var.parameters.aws_credentials.admin.profile
   assume_role {
     role_arn = var.parameters.aws_credentials.admin.assume_role_arn
+  }
+  default_tags {
+    tags = var.parameters.default_tags
   }
 }
 
@@ -110,7 +119,8 @@ resource "aws_cloudwatch_event_target" "guardduty" {
 }
 
 resource "aws_sns_topic" "guardduty" {
-  name = "guardduty"
+  name              = "guardduty"
+  kms_master_key_id = aws_kms_alias.guardduty.name
 }
 
 resource "aws_sns_topic_policy" "guardduty" {
@@ -191,5 +201,39 @@ resource "aws_guardduty_member" "admin" {
       invite,
     ]
   }
+}
+
+resource "aws_kms_key" "guardduty" {
+  enable_key_rotation = true
+  policy              = data.aws_iam_policy_document.key.json
+}
+
+data "aws_iam_policy_document" "key" {
+  statement {
+    effect  = "Allow"
+    actions = ["kms:*"]
+    principals {
+      type        = "AWS"
+      identifiers = ["arn:aws:iam::${data.aws_caller_identity.admin.account_id}:root"]
+    }
+    resources = ["*"]
+  }
+  statement {
+    effect = "Allow"
+    actions = [
+      "kms:Decrypt",
+      "kms:GenerateDataKey",
+    ]
+    principals {
+      type        = "Service"
+      identifiers = ["events.amazonaws.com"]
+    }
+    resources = ["*"]
+  }
+}
+
+resource "aws_kms_alias" "guardduty" {
+  name          = "alias/guardduty"
+  target_key_id = aws_kms_key.guardduty.key_id
 }
 

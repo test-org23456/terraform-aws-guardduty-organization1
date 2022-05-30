@@ -17,6 +17,7 @@ module "s3" {
     }
     ipset          = var.ipset
     threatintelset = var.threatintelset
+    default_tags   = var.default_tags
   }
 }
 
@@ -27,9 +28,9 @@ module "lambda" {
     aws_credentials = {
       admin = local.aws_credentials_admin
     }
-    incoming_web_hook_url = var.incoming_web_hook_url
-    slack_channel         = var.slack_channel
-    min_severity_level    = var.min_severity_level
+    slack_channel      = var.slack_channel
+    min_severity_level = var.min_severity_level
+    default_tags       = var.default_tags
   }
 }
 
@@ -43,6 +44,7 @@ locals {
     s3                           = module.s3
     lambda                       = module.lambda
     filters                      = var.filters
+    default_tags                 = var.default_tags
   }
 }
 

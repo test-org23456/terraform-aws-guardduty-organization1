@@ -11,9 +11,9 @@ variable "parameters" {
         assume_role_arn = string
       })
     })
-    incoming_web_hook_url = string
-    slack_channel         = string
-    min_severity_level    = string
+    slack_channel      = string
+    min_severity_level = string
+    default_tags       = map(any)
   })
 }
 

@@ -18,6 +18,7 @@ variable "parameters" {
     s3                           = any
     lambda                       = any
     filters                      = any
+    default_tags                 = map(any)
   })
 }
 

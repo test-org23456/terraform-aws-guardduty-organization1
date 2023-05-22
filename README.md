@@ -51,29 +51,29 @@ subgraph "np"["STS (Security Token)"]
 nq{{"data.<br/>aws_caller_identity.<br/>admin"}}:::r
 end
 class np cs
-subgraph "nr"["Output Values"]
-ns(["output.aws_region"]):::v
-nt(["output.function"]):::v
-nu(["output.secretsmanager_secret"]):::v
+nr[/"provider<br/>[&quot;registry.terraform.io/hashicorp/archive&quot;]"\]
+ns[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
+subgraph "nt"["Input Variables"]
+nu(["var.aws_region"]):::v
+nv(["var.parameters"]):::v
 end
-class nr vs
-nv[/"provider<br/>[&quot;registry.terraform.io/hashicorp/archive&quot;]"\]
-nw[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
-subgraph "nx"["Input Variables"]
-ny(["var.aws_region"]):::v
-nz(["var.parameters"]):::v
+class nt vs
+nw(["local.<br/>guardduty_to_slack_policy_arns"]):::v
+nx(["local.example_secret"]):::v
+ny(["local.function_name"]):::v
+subgraph "nz"["Output Values"]
+n10(["output.aws_region"]):::v
+n11(["output.function"]):::v
+n12(["output.secretsmanager_secret"]):::v
 end
-class nx vs
-n10(["local.<br/>guardduty_to_slack_policy_arns"]):::v
-n11(["local.example_secret"]):::v
-n12(["local.function_name"]):::v
+class nz vs
 ni-->n1
 nc-->n3
 nd-->n4
 ne-->n5
 nb-->n6
 n6-->n7
-n10-->n7
+nw-->n7
 n3-->n8
 n6-->n8
 n4-->n9
@@ -87,28 +87,28 @@ nm-->nk
 no-->nk
 ni-->nm
 nm-->nn
-n11-->nn
-nv-->no
-nw-->nq
-nw-->nb
+nx-->nn
+nr-->no
+ns-->nq
+ns-->nb
 ni-->nc
 n1-->nd
 nm-->ne
 nq-->nf
-n12-->nf
-ny--->ns
-nk--->nt
-nm--->nu
-no-->nv
-n7-->nw
-n8-->nw
-n9-->nw
-na-->nw
-nh-->nw
-nk-->nw
-nn-->nw
-ny--->nw
-nz--->nw
+ny-->nf
+nu--->n10
+nk--->n11
+nm--->n12
+no-->nr
+n7-->ns
+n8-->ns
+n9-->ns
+na-->ns
+nh-->ns
+nk-->ns
+nn-->ns
+nu--->ns
+nv--->ns
 ```
 
 ## region
@@ -274,20 +274,20 @@ ne{{"data.<br/>aws_iam_policy_document.<br/>guardduty"}}:::r
 nf{{"data.<br/>aws_iam_policy_document.<br/>key"}}:::r
 end
 class nd cs
-subgraph "ng"["Output Values"]
-nh(["output.ipset_location"]):::v
-ni(["output.<br/>threatintelset_location"]):::v
+ng[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
+subgraph "nh"["Input Variables"]
+ni(["var.aws_region"]):::v
+nj(["var.parameters"]):::v
 end
-class ng vs
-nj[/"provider<br/>[&quot;registry.terraform.io/hashicorp/aws&quot;]"\]
-subgraph "nk"["Input Variables"]
-nl(["var.aws_region"]):::v
-nm(["var.parameters"]):::v
+class nh vs
+subgraph "nk"["Output Values"]
+nl(["output.ipset_location"]):::v
+nm(["output.<br/>threatintelset_location"]):::v
 end
 class nk vs
 n2-->n1
 nf-->n2
-nj-->n4
+ng-->n4
 n4-->n5
 n7-->n6
 ne-->n6
@@ -296,19 +296,19 @@ n2-->n8
 n4-->n8
 n4-->n9
 n4-->na
-nj-->nc
+ng-->nc
 n4-->ne
 nc-->ne
 nc-->nf
-n9--->nh
-na--->ni
-n1-->nj
-n5-->nj
-n6-->nj
-n8-->nj
-n9-->nj
-na-->nj
-nl--->nj
-nm--->nj
+n9--->nl
+na--->nm
+n1-->ng
+n5-->ng
+n6-->ng
+n8-->ng
+n9-->ng
+na-->ng
+ni--->ng
+nj--->ng
 ```
 

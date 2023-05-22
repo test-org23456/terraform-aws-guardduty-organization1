@@ -9,8 +9,6 @@ jobs:
       contents: write
       repository-projects: write
       pull-requests: write
-    env:
-      TF_PLUGIN_CACHE_DIR: ${{ github.workspace }}/.terraform.d/plugin-cache
     steps:
       - uses: actions/checkout@v3
       - uses: asannou/tfmermaid-action@master
